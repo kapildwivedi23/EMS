@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>EMS Chat</title>
+  <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f0f2f5;
+      padding: 0;
+      margin: 0;
+      min-height: 100vh;
+    }
+
+    #chatBox {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: #ffffff;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      color: #111b21;
+      background: #f0f2f5;
+      margin: 0;
+      padding: 20px;
+      font-size: 20px;
+      border-bottom: 1px solid #e9edef;
+      font-weight: 600;
+    }
+
+    .chat-controls {
+      display: flex;
+      gap: 15px;
+      padding: 15px 20px;
+      background: #f0f2f5;
+      border-bottom: 1px solid #e9edef;
+    }
+
+    .control-group {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    label {
+      font-weight: 500;
+      color: #667781;
+      font-size: 12px;
+    }
+
+    #messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+      background: #efeae2;
+      background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="a" patternUnits="userSpaceOnUse" width="20" height="20"><circle cx="10" cy="10" r="0.5" fill="%23000000" opacity="0.08"/></pattern></defs><rect width="100" height="100" fill="url(%23a)"/></svg>');
+    }
+
+    .msg {
+      margin: 8px 0;
+      padding: 8px 12px;
+      border-radius: 7px;
+      max-width: 65%;
+      position: relative;
+      word-wrap: break-word;
+      clear: both;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    }
+
+    .group {
+      background: #d9fdd3;
+      color: #111b21;
+      margin-left: auto;
+      float: right;
+    }
+
+    .private {
+      background: #d9fdd3;
+      color: #111b21;
+      margin-left: auto;
+      float: right;
+    }
+
+    .admin-msg {
+      background: #ffffff;
+      color: #111b21;
+      margin-right: auto;
+      float: left;
+    }
+
+    .msg:after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .group:after,
+    .private:after {
+      right: -8px;
+      border-left: 8px solid #d9fdd3;
+      border-bottom: 8px solid transparent;
+    }
+
+    .admin-msg:after {
+      left: -8px;
+      border-right: 8px solid #ffffff;
+      border-bottom: 8px solid transparent;
+    }
+
+    .msg-time {
+      font-size: 11px;
+      color: #667781;
+      margin-left: 8px;
+      float: right;
+    }
+
+    .msg-sender {
+      font-weight: 600;
+      color: #00a884;
+      font-size: 13px;
+      margin-bottom: 2px;
+      display: block;
+    }
+
+    .msg-text {
+      font-size: 14px;
+      line-height: 1.4;
+      display: block;
+      margin-bottom: 15px;
+    }
+
+    .admin-tag {
+      background: #00a884;
+      color: white;
+      padding: 2px 5px;
+      border-radius: 3px;
+      font-size: 9px;
+      font-weight: 600;
+      margin-right: 5px;
+    }
+
+    #controls {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      padding: 10px 20px;
+      background: #f0f2f5;
+      border-top: 1px solid #e9edef;
+    }
+
+    #text {
+      flex: 1;
+      padding: 12px 15px;
+      border: none;
+      border-radius: 21px;
+      font-size: 14px;
+      outline: none;
+      background: #ffffff;
+      color: #111b21;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    #text::placeholder {
+      color: #667781;
+    }
+
+    select,
+    input[type="text"] {
+      padding: 8px 12px;
+      border: 1px solid #e9edef;
+      border-radius: 6px;
+      font-size: 13px;
+      outline: none;
+      background: #ffffff;
+      color: #111b21;
+      min-width: 150px;
+    }
+
+    select:focus,
+    input[type="text"]:focus {
+      border-color: #00a884;
+    }
+
+    button {
+      padding: 10px 15px;
+      border: none;
+      border-radius: 50%;
+      background: #00a884;
+      color: white;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      width: 45px;
+      height: 45px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    button:hover {
+      background: #06967a;
+      transform: translateY(-1px);
+    }
+
+    button:active {
+      transform: scale(0.95);
+    }
+
+    .loading {
+      text-align: center;
+      color: #667781;
+      font-style: italic;
+      padding: 20px;
+    }
+
+    .error {
+      color: #d93025;
+      font-weight: 500;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .online-indicator {
+      display: none;
+    }
+
+    /* Scrollbar styling */
+    #messages::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    #messages::-webkit-scrollbar-track {
+      background: #f0f2f5;
+    }
+
+    #messages::-webkit-scrollbar-thumb {
+      background: #c1c7cd;
+      border-radius: 3px;
+    }
+
+    #messages::-webkit-scrollbar-thumb:hover {
+      background: #a8adb3;
+    }
+
+    @media (max-width: 768px) {
+      .chat-controls {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      #chatBox {
+        margin: 0;
+        height: 100vh;
+      }
+
+      .msg {
+        max-width: 85%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="chatBox">
+    <h2>EMS Chat System</h2>
+
+    <div class="chat-controls">
+      <div class="control-group">
+        <label for="chatType">💬 Chat Type:</label>
+        <select id="chatType">
+          <option value="group">Group Chat</option>
+          <option value="private">Private Chat</option>
+        </select>
+      </div>
+
+      <div class="control-group">
+        <label for="receiverSelect">👤 Select User:</label>
+        <select id="receiverSelect" style="display:none;">
+          <option value="">Select a user...</option>
+        </select>
+        <input id="receiverId" placeholder="Receiver ID (manual entry)" style="display:none;" />
+      </div>
+    </div>
+
+    <div id="messages"></div>
+
+    <div id="controls">
+      <input id="text" placeholder="Type your message..." autocomplete="off" />
+      <button id="sendBtn">
+        <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 0 24 24" width="20" fill="#ffffff">
+          <path d="M0 0h24v24H0z" fill="none" />
+          <path d="M2 21l21-9L2 3v7l15 2-15 2z" />
+        </svg>
+      </button>
+
+    </div>
+  </div>
+
+  <script>
+    const socket = io('http://localhost:4000');
+    const myId = localStorage.getItem('userId');
+
+    if (!myId) {
+      alert('❌ User ID missing. Please log in again.');
+      window.location.href = 'index.html';
+    }
+
+    socket.emit("join-private", myId);
+    socket.emit("join-group");
+
+    const chatTypeSel = document.getElementById('chatType');
+    const receiverSelect = document.getElementById('receiverSelect');
+    const receiverIn = document.getElementById('receiverId');
+    const messagesDiv = document.getElementById('messages');
+    const textInput = document.getElementById('text');
+    const sendBtn = document.getElementById('sendBtn');
+
+    let users = [];
+
+    // Load users from backend
+    async function loadUsers() {
+      try {
+        const response = await fetch('/api/users');
+        users = await response.json();
+
+        // Clear existing options
+        receiverSelect.innerHTML = '<option value="">Select a user...</option>';
+
+        // Add users to dropdown
+        users.forEach(user => {
+          if (user._id !== myId) { // Don't show current user
+            const option = document.createElement('option');
+            option.value = user._id;
+            option.innerHTML = `${user.name} (${user.role})`;
+            receiverSelect.appendChild(option);
+          }
+        });
+      } catch (error) {
+        console.error('Error loading users:', error);
+        // Fallback to manual entry
+        receiverIn.style.display = 'block';
+        receiverSelect.style.display = 'none';
+      }
+    }
+
+    function addMsgEl(msg, cls) {
+      const div = document.createElement('div');
+      div.className = `msg ${cls}`;
+      const time = new Date(msg.timestamp).toLocaleTimeString();
+
+      const sender = msg.senderId;
+      const senderName = typeof sender === 'object' ? sender.name : sender;
+      const role = typeof sender === 'object' ? sender.role : '';
+      const isAdmin = role === 'admin';
+
+      const adminTag = isAdmin ? '<span class="admin-tag">ADMIN</span>' : '';
+      const onlineIndicator = '<span class="online-indicator"></span>';
+
+      div.innerHTML = `
+        <span class="msg-time">${time}</span>
+        ${adminTag}
+        ${onlineIndicator}
+        <span class="msg-sender">${senderName}:</span>
+        <span class="msg-text">${msg.text}</span>
+      `;
+
+      if (isAdmin) {
+        div.classList.add('admin-msg');
+      }
+
+      messagesDiv.appendChild(div);
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+
+    async function loadHistory() {
+      messagesDiv.innerHTML = '<div class="loading">⏳ Loading messages...</div>';
+      try {
+        let res;
+        if (chatTypeSel.value === 'group') {
+          res = await fetch('/messages/group');
+        } else {
+          const rid = receiverSelect.value || receiverIn.value.trim();
+          if (!rid) {
+            messagesDiv.innerHTML = '<div class="loading">👆 Please select a user to view private messages</div>';
+            return;
+          }
+          res = await fetch(`/messages/private/${myId}/${rid}`);
+        }
+
+        if (!res.ok) {
+          throw new Error('Failed to load messages');
+        }
+
+        const data = await res.json();
+        messagesDiv.innerHTML = '';
+
+        if (data.length === 0) {
+          messagesDiv.innerHTML = '<div class="loading">💬 No messages yet. Start the conversation!</div>';
+          return;
+        }
+
+        data.forEach(m => addMsgEl(m, m.isGroup ? 'group' : 'private'));
+      } catch (err) {
+        messagesDiv.innerHTML = '<div class="error">❌ Error loading messages. Please try again.</div>';
+        console.error(err);
+      }
+    }
+
+    function sendMessage() {
+      const text = textInput.value.trim();
+      if (!text) return;
+
+      if (chatTypeSel.value === 'group') {
+        socket.emit('group-message', { senderId: myId, text });
+      } else {
+        const rid = receiverSelect.value || receiverIn.value.trim();
+        if (!rid) {
+          alert('⚠️ Please select a user to send private message');
+          return;
+        }
+        socket.emit('private-message', { senderId: myId, receiverId: rid, text });
+      }
+      textInput.value = '';
+    }
+
+    // Event listeners
+    sendBtn.addEventListener('click', sendMessage);
+    textInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') sendMessage();
+    });
+
+    chatTypeSel.addEventListener('change', () => {
+      const isPrivate = chatTypeSel.value === 'private';
+      receiverSelect.style.display = isPrivate ? 'block' : 'none';
+      receiverIn.style.display = 'none'; // Hide manual entry by default
+      loadHistory();
+    });
+
+    receiverSelect.addEventListener('change', () => {
+      if (chatTypeSel.value === 'private') loadHistory();
+    });
+
+    receiverIn.addEventListener('input', () => {
+      if (chatTypeSel.value === 'private') loadHistory();
+    });
+
+    // Socket event listeners
+    socket.on('group-message', (msg) => {
+      if (chatTypeSel.value === 'group') addMsgEl(msg, 'group');
+    });
+
+    socket.on('private-message', (msg) => {
+      const rid = receiverSelect.value || receiverIn.value.trim();
+      const senderId = typeof msg.senderId === 'object' ? msg.senderId._id : msg.senderId;
+      const receiverId = typeof msg.receiverId === 'object' ? msg.receiverId._id : msg.receiverId;
+
+      const isMine = senderId === myId && receiverId === rid;
+      const isForMe = senderId === rid && receiverId === myId;
+
+      if (chatTypeSel.value === 'private' && (isMine || isForMe)) {
+        addMsgEl(msg, 'private');
+      }
+    });
+
+    socket.on('user-online', (userId) => {
+      console.log('User online:', userId);
+      // Update UI to show user is online
+    });
+
+    socket.on('user-offline', (userId) => {
+      console.log('User offline:', userId);
+      // Update UI to show user is offline
+    });
+
+    // Initialize
+    loadUsers();
+    loadHistory();
+  </script>
+</body>
+
+</html>

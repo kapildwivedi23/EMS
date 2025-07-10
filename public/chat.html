@@ -115,26 +115,36 @@
       border-bottom: 8px solid transparent;
     }
 
-    .msg-time {
-      font-size: 11px;
-      color: #667781;
-      margin-left: 8px;
-      float: right;
+    .msg-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 2px;
+      gap: 5px;
     }
 
     .msg-sender {
       font-weight: 600;
       color: #00a884;
       font-size: 13px;
-      margin-bottom: 2px;
-      display: block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      flex-shrink: 0;
+    }
+
+    .msg-time {
+      font-size: 11px;
+      color: #667781;
+      margin-left: auto;
+      flex-shrink: 0;
+      white-space: nowrap;
     }
 
     .msg-text {
       font-size: 14px;
       line-height: 1.4;
       display: block;
-      margin-bottom: 15px;
+      margin-bottom: 5px;
     }
 
     .admin-tag {
@@ -144,7 +154,7 @@
       border-radius: 3px;
       font-size: 9px;
       font-weight: 600;
-      margin-right: 5px;
+      flex-shrink: 0;
     }
 
     #controls {
@@ -332,16 +342,32 @@
         const response = await fetch('/api/users');
         users = await response.json();
 
+        // Find current user's role
+        const currentUser = users.find(user => user._id === myId);
+        const isCurrentUserEmployee = currentUser && currentUser.role === 'employee';
+
         // Clear existing options
         receiverSelect.innerHTML = '<option value="">Select a user...</option>';
 
-        // Add users to dropdown
+        // Add users to dropdown based on current user's role
         users.forEach(user => {
-          if (user._id !== myId) { // Don't show current user
-            const option = document.createElement('option');
-            option.value = user._id;
-            option.innerHTML = `${user.name} (${user.role})`;
-            receiverSelect.appendChild(option);
+          if (user._id !== myId) {
+            // If current user is employee, show only admins
+            // If current user is admin, show all users
+            if (isCurrentUserEmployee) {
+              if (user.role === 'admin') {
+                const option = document.createElement('option');
+                option.value = user._id;
+                option.innerHTML = `${user.name} (${user.role})`;
+                receiverSelect.appendChild(option);
+              }
+            } else {
+              // Current user is admin, show all users
+              const option = document.createElement('option');
+              option.value = user._id;
+              option.innerHTML = `${user.name} (${user.role})`;
+              receiverSelect.appendChild(option);
+            }
           }
         });
       } catch (error) {
@@ -352,10 +378,17 @@
       }
     }
 
+    function formatTime(timestamp) {
+      const date = new Date(timestamp);
+      const hours = date.getHours().toString().padStart(2, '0');
+      const minutes = date.getMinutes().toString().padStart(2, '0');
+      return `${hours}:${minutes}`;
+    }
+
     function addMsgEl(msg, cls) {
       const div = document.createElement('div');
       div.className = `msg ${cls}`;
-      const time = new Date(msg.timestamp).toLocaleTimeString();
+      const time = formatTime(msg.timestamp);
 
       const sender = msg.senderId;
       const senderName = typeof sender === 'object' ? sender.name : sender;
@@ -366,10 +399,11 @@
       const onlineIndicator = '<span class="online-indicator"></span>';
 
       div.innerHTML = `
-        <span class="msg-time">${time}</span>
-        ${adminTag}
-        ${onlineIndicator}
-        <span class="msg-sender">${senderName}:</span>
+        <div class="msg-header">
+          ${adminTag}
+          <span class="msg-sender">${senderName}:</span>
+          <span class="msg-time">${time}</span>
+        </div>
         <span class="msg-text">${msg.text}</span>
       `;
 

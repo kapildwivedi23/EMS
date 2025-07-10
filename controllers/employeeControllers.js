@@ -9,24 +9,41 @@ exports.getTasks = async (req, res) => {
   }
 };
 
+
+// Backend: routes/employee.js or wherever you handle task completion
 exports.completeTask = async (req, res) => {
   try {
-    const task = await Task.findById(req.params.id);
+    console.log('🎯 completeTask called');
+    const taskId = req.params.id;
+    const { remark } = req.body;
+    const photoPath = req.file ? `/uploads/${req.file.filename}` : null;
+
+    const task = await Task.findById(taskId);
     if (!task) {
+      console.log('❌ Task not found');
       return res.status(404).json({ message: 'Task not found' });
     }
 
+    console.log('📋 Before:', task);
+
     task.status = 'Completed';
-    task.remark = req.body.remark;
-    task.photoPath = req.file?.path || '';
+    task.remark = remark;
+    task.photoPath = photoPath;
     task.completedAt = new Date();
 
     await task.save();
-    res.json(task);
-  } catch (err) {
-    res.status(500).json({ message: 'Error completing task', error: err.message });
+
+    console.log('✅ After:', await Task.findById(taskId));
+
+    res.status(200).json({ message: 'Task marked as completed' });
+  } catch (error) {
+    console.error('🔥 Error in completeTask:', error);
+    res.status(500).json({ message: 'Error completing task' });
   }
 };
+
+
+
 
 exports.dashboard = async (req, res) => {
   try {

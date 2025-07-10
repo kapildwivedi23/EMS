@@ -14,16 +14,15 @@ const io = socketIO(server, {
     methods: ['GET', 'POST']
   }
 });
-chatHandler(io);
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 app.use('/uploads', express.static('uploads'));
-app.use(express.static('public')); // serve chat.html from public/
+app.use(express.static('public'));
 const userRoutes = require('./routes/userRoutes');
 app.use('/', userRoutes);
-// Routes
+
 app.use('/auth', require('./routes/authRoutes'));
 app.use('/admin', require('./routes/adminRoutes'));
 app.use('/employee', require('./routes/employeeRoutes'));
@@ -40,6 +39,6 @@ mongoose.connect(process.env.MONGO_URI)
   .then(() => {
     console.log('MongoDB connected');
     server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-    chatHandler(io); // init socket logic after DB connection
+    chatHandler(io); // ✅ Correct place to call
   })
-  .catch(err => console.log(err));
+  .catch(err => console.log("MongoDB connection error:", err));

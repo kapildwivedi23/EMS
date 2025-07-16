@@ -316,7 +316,11 @@
   </div>
 
   <script>
-    const socket = io('http://localhost:4000');
+    const socket = io(window.location.origin, {
+      transports: ['websocket'],
+    });
+
+
     const myId = localStorage.getItem('userId');
 
     if (!myId) {

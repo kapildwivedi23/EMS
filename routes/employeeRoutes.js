@@ -6,7 +6,7 @@ const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
 
 router.get('/tasks', auth(['employee']), employee.getTasks);
-router.post('/complete-task/:id',auth(['employee']) , upload.single('photo'), employee.completeTask);
+router.post('/submit-work/:id', auth(['employee']), upload.single('photo'), employee.submitWork);
 router.get('/dashboard', auth(['employee']), employee.dashboard);
 
 module.exports = router;

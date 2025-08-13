@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const User = require('../models/Employee'); // Assuming Employee model has user data
+const User = require('../models/Employee');
 
-// Get all users for dropdown
+// Enhanced: Get all users with complete profile info including createdAt
 router.get('/api/users', async (req, res) => {
   try {
-    const users = await User.find({}, 'name role _id email');
+    const users = await User.find({}, 'name role _id email phone username photoPath aadharNo createdAt');
     res.json(users);
   } catch (error) {
     console.error('Error fetching users:', error);

@@ -18,6 +18,92 @@
       border-radius: 10px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
+
+    /* Profile Section Styling */
+    .profile-section {
+      background: linear-gradient(135deg, #007bff, #0056b3);
+      color: white;
+      padding: 25px;
+      border-radius: 12px;
+      margin-bottom: 30px;
+      box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+    }
+
+    .profile-header {
+      display: flex;
+      align-items: center;
+      gap: 25px;
+      margin-bottom: 20px;
+    }
+
+    .profile-photo {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid rgba(255, 255, 255, 0.3);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .default-avatar {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 36px;
+      font-weight: bold;
+      border: 4px solid rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(10px);
+    }
+
+    .profile-basic h2 {
+      margin: 0 0 5px 0;
+      font-size: 28px;
+      font-weight: 600;
+    }
+
+    .profile-basic .role-badge {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .profile-details {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .detail-item {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 12px 15px;
+      border-radius: 8px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .detail-label {
+      font-size: 12px;
+      opacity: 0.8;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+
+    .detail-value {
+      font-size: 14px;
+      font-weight: 500;
+    }
+
     h2 {
       color: #333;
       margin-top: 30px;
@@ -25,6 +111,7 @@
       border-bottom: 1px solid #ddd;
       padding-bottom: 5px;
     }
+    
     input, select, button {
       display: block;
       width: 100%;
@@ -34,17 +121,42 @@
       border-radius: 6px;
       font-size: 14px;
     }
+    
     button {
-      background-color: #007bff;
-      color: white;
       border: none;
       font-weight: 600;
       cursor: pointer;
       transition: background 0.2s ease;
     }
-    button:hover {
+    
+    .submit-work-btn {
+      background-color: #28a745;
+      color: white;
+    }
+    
+    .submit-work-btn:hover {
+      background-color: #218838;
+    }
+    
+    .submit-again-btn {
+      background-color: #17a2b8;
+      color: white;
+      margin-top: 10px;
+    }
+    
+    .submit-again-btn:hover {
+      background-color: #138496;
+    }
+    
+    .load-btn {
+      background-color: #007bff;
+      color: white;
+    }
+    
+    .load-btn:hover {
       background-color: #0056b3;
     }
+    
     form {
       background: #f9f9f9;
       border: 1px solid #e0e0e0;
@@ -52,6 +164,38 @@
       padding: 15px;
       margin-bottom: 12px;
     }
+    
+    /* Processing task styling */
+    .processing-task {
+      background: #fff3cd !important;
+      border-left: 4px solid #ffc107;
+    }
+    
+    .processing-info {
+      background: rgba(255, 193, 7, 0.1);
+      border: 1px solid #ffc107;
+      border-radius: 6px;
+      padding: 12px;
+      margin: 10px 0;
+    }
+
+    /* Submission history styling */
+    .submission-history {
+      background: rgba(23, 162, 184, 0.1);
+      border: 1px solid #17a2b8;
+      border-radius: 6px;
+      padding: 12px;
+      margin: 10px 0;
+    }
+
+    .submission-item {
+      background: white;
+      border-radius: 4px;
+      padding: 10px;
+      margin: 8px 0;
+      border-left: 3px solid #17a2b8;
+    }
+    
     hr {
       border: none;
       border-top: 1px solid #eee;
@@ -81,10 +225,112 @@
     i {
       color: #999;
     }
+
+    /* FIXED: Task image sizing */
+    .task-photo {
+      max-width: 150px;
+      max-height: 120px;
+      width: auto;
+      height: auto;
+      border-radius: 6px;
+      margin-top: 5px;
+      object-fit: cover;
+      border: 2px solid #ddd;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .task-photo:hover {
+      transform: scale(1.02);
+      border-color: #007bff;
+    }
+
+    /* Dashboard task photos */
+    #dash .task-photo {
+      max-width: 100px;
+      max-height: 80px;
+    }
+
+    /* Submission item photos */
+    .submission-item .task-photo {
+      max-width: 120px;
+      max-height: 90px;
+    }
+
+    @media (max-width: 768px) {
+      .profile-header {
+        flex-direction: column;
+        text-align: center;
+      }
+      
+      .profile-details {
+        grid-template-columns: 1fr;
+      }
+
+      .task-photo {
+        max-width: 120px;
+        max-height: 90px;
+      }
+
+      .profile-photo {
+        width: 70px;
+        height: 70px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .task-photo {
+        max-width: 100px;
+        max-height: 75px;
+      }
+
+      .profile-photo {
+        width: 60px;
+        height: 60px;
+      }
+    }
   </style>
 </head>
 <body>
   <div class="box">
+    <!-- Profile Section -->
+    <div class="profile-section">
+      <div class="profile-header">
+        <div id="profilePhotoContainer"></div>
+        <div class="profile-basic">
+          <h2 id="employeeName">Loading...</h2>
+          <span class="role-badge">👤 Employee</span>
+        </div>
+      </div>
+
+      <div class="profile-details">
+        <div class="detail-item">
+          <div class="detail-label">📧 Email Address</div>
+          <div class="detail-value" id="employeeEmail">Loading...</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-label">📱 Phone Number</div>
+          <div class="detail-value" id="employeePhone">Loading...</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-label">🆔 Username</div>
+          <div class="detail-value" id="employeeUsername">Loading...</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-label">🏛️ Aadhar Number</div>
+          <div class="detail-value" id="employeeAadhar">Loading...</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-label">📅 Joined Date</div>
+          <div class="detail-value" id="employeeJoined">Loading...</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-label">🆔 Employee ID</div>
+          <div class="detail-value" id="employeeId">Loading...</div>
+        </div>
+      </div>
+    </div>
+
     <div class="top-buttons">
       <button onclick="logout()">Logout</button>
       <button onclick="goToChat()">Chat</button>
@@ -94,7 +340,7 @@
     <div id="taskList"></div>
 
     <h2>Dashboard</h2>
-    <button onclick="loadDashboard()">Load</button>
+    <button class="load-btn" onclick="loadDashboard()">Load</button>
     <div id="dash"></div>
   </div>
 
@@ -103,30 +349,139 @@
     const userId = localStorage.getItem('userId');
     if (!token || localStorage.getItem('role') !== 'employee') window.location.href = 'index.html';
 
+    // Load Profile Function
+    async function loadProfile() {
+      try {
+        const res = await fetch('/api/users', {
+          headers: { 'Authorization': 'Bearer ' + token }
+        });
+        const users = await res.json();
+        
+        const currentEmployee = users.find(user => user._id === userId);
+        
+        if (currentEmployee) {
+          document.getElementById('employeeName').textContent = currentEmployee.name || 'N/A';
+          document.getElementById('employeeEmail').textContent = currentEmployee.email || 'N/A';
+          document.getElementById('employeePhone').textContent = currentEmployee.phone || 'N/A';
+          document.getElementById('employeeUsername').textContent = currentEmployee.username || 'N/A';
+          document.getElementById('employeeAadhar').textContent = currentEmployee.aadharNo || 'N/A';
+          document.getElementById('employeeId').textContent = currentEmployee._id || 'N/A';
+          
+          if (currentEmployee.createdAt) {
+            const joinedDate = new Date(currentEmployee.createdAt).toLocaleDateString('en-GB', {
+              day: '2-digit',
+              month: 'short',
+              year: 'numeric'
+            });
+            document.getElementById('employeeJoined').textContent = joinedDate;
+          } else {
+            document.getElementById('employeeJoined').textContent = 'N/A';
+          }
+          
+          const photoContainer = document.getElementById('profilePhotoContainer');
+          
+          if (currentEmployee.photoPath && currentEmployee.photoPath !== 'null') {
+            photoContainer.innerHTML = `
+              <img src="${currentEmployee.photoPath}" 
+                   alt="Profile Photo" 
+                   class="profile-photo"
+                   onerror="showDefaultAvatar('${currentEmployee.name}')" />
+            `;
+          } else {
+            showDefaultAvatar(currentEmployee.name);
+          }
+        }
+      } catch (error) {
+        console.error('Error loading profile:', error);
+        showDefaultAvatar('Employee');
+      }
+    }
+
+    function showDefaultAvatar(name) {
+      const firstLetter = name ? name.charAt(0).toUpperCase() : 'E';
+      const photoContainer = document.getElementById('profilePhotoContainer');
+      photoContainer.innerHTML = `
+        <div class="default-avatar">
+          ${firstLetter}
+        </div>
+      `;
+    }
+
+    // Load Tasks Function with Submission History
     async function loadTasks() {
       const res = await fetch('/employee/tasks', {
         headers: { 'Authorization': 'Bearer ' + token }
       });
       const data = await res.json();
-      const html = data.map(t => `
-        <form onsubmit="return completeTask('${t._id}', this)">
-          <b>${t.description}</b><br>
-          Remark: <input name="remark" required />
-          Photo: <input type="file" name="photo" required />
-          <button>Complete</button>
-        </form><hr>`).join('');
-      document.getElementById('taskList').innerHTML = html || '<i>No pending tasks</i>';
+      
+      const html = data.map(t => {
+        if (t.status === 'Processing') {
+          // Show processing status with submission history and submit again option
+          const submissionHistory = t.submissions ? t.submissions.map((submission, index) => `
+            <div class="submission-item">
+              <strong>📤 Submission #${index + 1}</strong> - ${new Date(submission.submittedAt).toLocaleDateString('en-GB')} at ${new Date(submission.submittedAt).toLocaleTimeString('en-GB')}<br>
+              <strong>Remark:</strong> ${submission.remark}<br>
+              ${submission.photoPath ? `<strong>Photo:</strong> <img src="${submission.photoPath}" class="task-photo" />` : '<em>No photo</em>'}
+            </div>
+          `).join('') : '';
+
+          return `
+            <div class="processing-task" style="background: #fff3cd; border: 1px solid #ffc107; border-radius: 6px; padding: 15px; margin-bottom: 12px;">
+              <b>📋 ${t.description}</b><br>
+              <small>📅 Created: ${new Date(t.createdAt).toLocaleDateString()}</small><br>
+              <small>📊 Total Submissions: ${t.submissions ? t.submissions.length : 0}</small><br>
+              
+              <div class="processing-info">
+                <strong style="color: #856404;">🔄 Status: PROCESSING</strong><br>
+                <small>Work submitted successfully. Waiting for admin approval.</small>
+              </div>
+
+              ${t.submissions && t.submissions.length > 0 ? `
+                <div class="submission-history">
+                  <strong style="color: #17a2b8;">📋 Submission History</strong>
+                  ${submissionHistory}
+                </div>
+              ` : ''}
+
+              <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #ffc107;">
+                <strong style="color: #17a2b8;">📤 Want to submit again with updated work?</strong>
+                <form onsubmit="return submitWork('${t._id}', this, true)">
+                  <label>Additional Work Remark:</label>
+                  <input name="remark" placeholder="Add new remarks or updates..." required />
+                  <label>New/Updated Proof Photo:</label>
+                  <input type="file" name="photo" accept="image/*" required />
+                  <button type="submit" class="submit-again-btn">📤 Submit Again</button>
+                </form>
+              </div>
+            </div><hr>`;
+        } else {
+          // Show pending tasks with Submit Work button
+          return `
+            <form onsubmit="return submitWork('${t._id}', this, false)">
+              <b>📋 ${t.description}</b><br>
+              <small>📅 Created: ${new Date(t.createdAt).toLocaleDateString()}</small><br>
+              <label>Work Remark:</label>
+              <input name="remark" placeholder="Describe your completed work..." required />
+              <label>Proof Photo:</label>
+              <input type="file" name="photo" accept="image/*" required />
+              <button type="submit" class="submit-work-btn">📤 Submit Work</button>
+            </form><hr>`;
+        }
+      }).join('');
+      
+      document.getElementById('taskList').innerHTML = html || '<i>No tasks assigned</i>';
     }
 
-    async function completeTask(taskId, form) {
+    // Submit Work Function with Multiple Submissions Support
+    async function submitWork(taskId, form, isAdditionalSubmission = false) {
       const formData = new FormData(form);
-      console.log('📦 Submitting taskId:', taskId); // Log for debug
+      
+      console.log(`📦 ${isAdditionalSubmission ? 'Additional submission' : 'Initial submission'} for taskId:`, taskId);
 
-      const res = await fetch(`/employee/complete-task/${taskId}`, {
+      const res = await fetch(`/employee/submit-work/${taskId}`, {
         method: 'POST',
         headers: {
           Authorization: 'Bearer ' + token
-          // Do not set Content-Type manually
         },
         body: formData
       });
@@ -135,31 +490,84 @@
       console.log('📬 Response:', result);
 
       if (res.ok) {
-        alert('✅ Task marked as completed!');
-        await new Promise(resolve => setTimeout(resolve, 300)); // sync delay
+        if (isAdditionalSubmission) {
+          alert(`📤 Additional work submitted successfully! Submission #${result.submissionNumber} sent to admin.`);
+        } else {
+          alert('✅ Work submitted successfully! Waiting for admin approval.');
+        }
+        await new Promise(resolve => setTimeout(resolve, 300));
         await loadTasks();
         await loadDashboard();
       } else {
-        alert('❌ Failed to complete task.');
+        alert(`❌ Failed to submit work: ` + result.message);
       }
 
-      return false; // prevent form reload
+      return false;
     }
 
+    // Dashboard with submission counts
     async function loadDashboard() {
       const res = await fetch('/employee/dashboard', {
         headers: { 'Authorization': 'Bearer ' + token }
       });
       const data = await res.json();
-      const taskHtml = data.history.map(task => `
-        <div>
-          <b>${task.description}</b> — ${task.status === 'Completed' ? '✅ Completed' : '⏳ Pending'}<br>
-          Remark: ${task.remark || 'N/A'}<br>
-          ${task.photoPath ? `<img src="${task.photoPath}" width="100" />` : ''}
-        </div><hr>`).join('');
+      
+      const taskHtml = data.history.map(task => {
+        let statusColor = '#fff3cd';
+        let statusText = '⏳ PENDING';
+        let statusTextColor = '#856404';
+        
+        if (task.status === 'Processing') {
+          statusColor = '#cce5ff';
+          statusText = '🔄 PROCESSING';
+          statusTextColor = '#004085';
+        } else if (task.status === 'Completed') {
+          statusColor = '#d4edda';
+          statusText = '✅ COMPLETED';
+          statusTextColor = '#155724';
+        }
+        
+        const submissionCount = task.submissions ? task.submissions.length : 0;
+        
+        return `
+        <div style="border: 1px solid #ddd; padding: 15px; margin: 8px 0; border-radius: 8px; background: ${statusColor};">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <b style="color: #333;">${task.description}</b>
+            <span style="padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: bold; background: ${statusColor}; color: ${statusTextColor};">
+              ${statusText}
+            </span>
+          </div>
+          
+          <div style="font-size: 12px; color: #666; margin-bottom: 8px;">
+            📅 Created: ${new Date(task.createdAt).toLocaleDateString('en-GB')}
+            ${submissionCount > 0 ? ` | 📊 Submissions: ${submissionCount}` : ''}
+            ${task.completedAt ? ` | ✅ Completed: ${new Date(task.completedAt).toLocaleDateString('en-GB')}` : ''}
+          </div>
+          
+          ${submissionCount > 0 ? `
+            <div style="margin-bottom: 8px;">
+              <strong>Latest Submission:</strong> ${task.remark || '<i>No remark provided</i>'}
+              ${task.photoPath ? `<br><img src="${task.photoPath}" class="task-photo" alt="Latest Photo" style="cursor: pointer;" onclick="window.open('${task.photoPath}', '_blank')" />` : ''}
+            </div>
+          ` : ''}
+        </div>`;
+      }).join('');
+        
       document.getElementById('dash').innerHTML = `
-        <p><b>Summary:</b> Total: ${data.total}, ✅ ${data.completed}, ⏳ ${data.pending}</p>
-        ${taskHtml || '<i>No tasks yet</i>'}`;
+        <div style="background: #e9ecef; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+          <h4 style="margin: 0 0 10px 0; color: #333;">📊 Task Summary</h4>
+          <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+            <div><strong>Total Tasks:</strong> <span style="color: #007bff;">${data.total}</span></div>
+            <div><strong>Completed:</strong> <span style="color: #28a745;">${data.completed}</span></div>
+            <div><strong>Processing:</strong> <span style="color: #007bff;">${data.processing}</span></div>
+            <div><strong>Pending:</strong> <span style="color: #6c757d;">${data.pending}</span></div>
+          </div>
+        </div>
+        
+        <h4 style="margin-bottom: 10px; color: #333;">📋 Task History</h4>
+        <div style="max-height: 400px; overflow-y: auto;">
+          ${taskHtml || '<i>No tasks assigned yet</i>'}
+        </div>`;
     }
 
     function logout() {
@@ -171,7 +579,8 @@
       window.location.href = 'chat.html';
     }
 
-    // Initial data load
+    // Load all data on page load
+    loadProfile();
     loadTasks();
     loadDashboard();
   </script>

@@ -23,14 +23,63 @@
     h2 {
       color: #333;
       margin-top: 30px;
-      margin-bottom: 10px;
+      margin-bottom: 20px;
       border-bottom: 1px solid #ddd;
       padding-bottom: 5px;
     }
 
-    input,
-    select,
-    button {
+    /* Navigation Button Styling */
+    .nav-buttons {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+
+    .nav-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 15px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      color: white;
+      min-height: 50px;
+    }
+
+    .nav-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .nav-btn.logout { background: linear-gradient(135deg, #dc3545, #c82333); }
+    .nav-btn.chat { background: linear-gradient(135deg, #28a745, #218838); }
+    .nav-btn.add-employee { background: linear-gradient(135deg, #007bff, #0056b3); }
+    .nav-btn.assign-task { background: linear-gradient(135deg, #6f42c1, #5a2d91); }
+    .nav-btn.view-report { background: linear-gradient(135deg, #fd7e14, #e55a00); }
+    .nav-btn.quick-stats { background: linear-gradient(135deg, #20c997, #17a085); }
+
+    /* Content sections */
+    .content-section {
+      display: none;
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+      border-left: 4px solid #007bff;
+    }
+
+    .content-section.active {
+      display: block;
+    }
+
+    input, select, button {
       display: block;
       width: 100%;
       padding: 10px 12px;
@@ -61,120 +110,1250 @@
       font-size: 14px;
     }
 
-    /* Top buttons (Logout and Chat) */
-    .top-buttons {
+    /* Photo upload styling */
+    .photo-upload {
+      border: 2px dashed #ccc;
+      border-radius: 6px;
+      padding: 15px;
+      text-align: center;
+      margin: 10px 0;
+      transition: border-color 0.2s ease;
+      cursor: pointer;
+    }
+
+    .photo-upload:hover {
+      border-color: #007bff;
+    }
+
+    .photo-upload input {
+      display: none;
+    }
+
+    .photo-upload label {
+      cursor: pointer;
+      color: #666;
+      font-size: 14px;
+    }
+
+    .photo-preview {
+      max-width: 100px;
+      max-height: 100px;
+      width: auto;
+      height: auto;
+      border-radius: 6px;
+      margin-top: 10px;
+      object-fit: cover;
+    }
+
+    /* Employee Card with Left-Aligned Profile Photo & Working Click Events */
+    .employee-card {
+      border: 1px solid #ddd;
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 8px;
+      background: #fff;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      transition: transform 0.2s ease;
+      display: flex;
+      align-items: flex-start;
+      gap: 15px;
+      cursor: pointer;
+    }
+
+    .employee-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+      background: rgba(0, 123, 255, 0.02);
+    }
+
+    .employee-photo-container {
+      flex-shrink: 0;
+    }
+
+    .employee-photo {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #007bff;
+      display: block;
+    }
+
+    .employee-default-photo {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #007bff, #0056b3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 24px;
+      font-weight: bold;
+      border: 3px solid #007bff;
+    }
+
+    .employee-info {
+      flex: 1;
+      text-align: left;
+      min-height: 60px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .employee-name {
+      color: #007bff;
+      font-weight: bold;
+      font-size: 16px;
+      margin: 0 0 8px 0;
+      text-decoration: none;
+    }
+
+    .employee-name:hover {
+      text-decoration: underline;
+      color: #0056b3;
+    }
+
+    .employee-stats {
+      margin: 4px 0;
+      font-size: 14px;
+      color: #666;
+      line-height: 1.4;
+    }
+
+    /* Task Assignment Options Styling */
+    .task-assignment-option {
+      border: 1px solid #ddd;
+      transition: all 0.3s ease;
+      margin: 15px 0;
+    }
+
+    .task-assignment-option:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .task-assignment-option h4 {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .assign-all-btn {
+      background: linear-gradient(135deg, #e91e63, #ad1457) !important;
+      font-weight: bold;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .assign-all-btn:hover {
+      background: linear-gradient(135deg, #c2185b, #880e4f) !important;
+      box-shadow: 0 4px 15px rgba(233, 30, 99, 0.4);
+    }
+
+    .assign-all-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    .assign-all-btn:hover::before {
+      left: 100%;
+    }
+
+    /* Modal styling */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+    }
+
+    .modal-content {
+      background-color: #fefefe;
+      margin: 2% auto;
+      padding: 20px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 800px;
+      max-height: 90vh;
+      overflow-y: auto;
+      position: relative;
+    }
+
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+      position: absolute;
+      right: 15px;
+      top: 10px;
+    }
+
+    .close:hover {
+      color: #000;
+    }
+
+    .task-detail {
+      border: 1px solid #ddd;
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 8px;
+      background: #f9f9f9;
+    }
+
+    .task-link {
+      color: #007bff;
+      cursor: pointer;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .task-link:hover {
+      text-decoration: underline;
+      color: #0056b3;
+    }
+
+    .task-photo {
+      max-width: 200px;
+      max-height: 150px;
+      width: auto;
+      height: auto;
+      border-radius: 6px;
+      margin-top: 8px;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+      border: 2px solid #ddd;
+      object-fit: cover;
+    }
+
+    .task-photo:hover {
+      transform: scale(1.02);
+      border-color: #007bff;
+    }
+
+    .task-status-completed {
+      background: #d4edda;
+      color: #155724;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .task-status-pending {
+      background: #fff3cd;
+      color: #856404;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .task-status-processing {
+      background: #cce5ff;
+      color: #004085;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .complete-task-btn {
+      background: #28a745;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: bold;
+      margin-top: 10px;
+      transition: background 0.2s ease;
+    }
+
+    .complete-task-btn:hover {
+      background: #218838;
+    }
+
+    .task-history-section {
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 8px;
+      margin: 15px 0;
+    }
+
+    .submission-entry {
+      background: white;
+      border: 1px solid #dee2e6;
+      border-radius: 6px;
+      padding: 15px;
+      margin: 10px 0;
+    }
+
+    .submission-header {
       display: flex;
       justify-content: space-between;
-      margin-bottom: 20px;
+      align-items: center;
+      margin-bottom: 10px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #eee;
     }
 
-    .top-buttons button {
-      width: 48%;
-      background-color: #28a745;
+    .submission-entry .task-photo {
+      max-width: 250px;
+      max-height: 200px;
     }
 
-    .top-buttons button:nth-child(1) {
-      background-color: #dc3545;
+    .image-modal {
+      display: none;
+      position: fixed;
+      z-index: 2000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.9);
     }
 
-    .top-buttons button:hover {
+    .image-modal-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      max-width: 90%;
+      max-height: 90%;
+    }
+
+    .image-modal img {
+      max-width: 85vw;
+      max-height: 85vh;
+      width: auto;
+      height: auto;
+      border-radius: 8px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+      object-fit: contain;
+    }
+
+    .image-close {
+      position: absolute;
+      top: 15px;
+      right: 35px;
+      color: #fff;
+      font-size: 40px;
+      font-weight: bold;
+      cursor: pointer;
+      z-index: 2001;
+    }
+
+    .image-close:hover {
+      color: #ccc;
+    }
+
+    .image-info {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.7);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 20px;
+      font-size: 14px;
+    }
+
+    /* Quick Stats Cards */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin: 20px 0;
+    }
+
+    .stat-card {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .stat-card h3 {
+      margin: 0 0 10px 0;
+      font-size: 24px;
+    }
+
+    .stat-card p {
+      margin: 0;
       opacity: 0.9;
+      font-size: 14px;
+    }
+
+    @media (max-width: 768px) {
+      .nav-buttons {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .nav-btn {
+        padding: 12px 15px;
+        font-size: 12px;
+      }
+
+      .employee-card {
+        flex-direction: row;
+        text-align: left;
+      }
+
+      .employee-photo,
+      .employee-default-photo {
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+      }
+
+      .task-photo {
+        max-width: 150px;
+        max-height: 120px;
+      }
+      
+      .submission-entry .task-photo {
+        max-width: 180px;
+        max-height: 140px;
+      }
+
+      .image-modal img {
+        max-width: 95vw;
+        max-height: 80vh;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .nav-buttons {
+        grid-template-columns: 1fr;
+      }
+
+      .task-photo {
+        max-width: 120px;
+        max-height: 90px;
+      }
     }
   </style>
 </head>
 <body>
   <div class="box">
-    <!-- NEW: Logout & Chat Buttons -->
-    <div class="top-buttons">
-      <button onclick="logout()">Logout</button>
-      <button onclick="goToChat()">Chat</button>
+    <h1 style="text-align: center; color: #333; margin-bottom: 30px;">🏢 Admin Dashboard</h1>
+    
+    <!-- Navigation Buttons -->
+    <div class="nav-buttons">
+      <button class="nav-btn logout" onclick="logout()">
+        🚪 Logout
+      </button>
+      <button class="nav-btn chat" onclick="goToChat()">
+        💬 Chat
+      </button>
+      <button class="nav-btn add-employee" onclick="toggleSection('add-employee-section')">
+        👤➕ Add Employee
+      </button>
+      <button class="nav-btn assign-task" onclick="toggleSection('assign-task-section')">
+        📋➕ Assign Task
+      </button>
+      <button class="nav-btn view-report" onclick="toggleSection('view-report-section')">
+        📊 View Reports
+      </button>
+      <button class="nav-btn quick-stats" onclick="toggleSection('quick-stats-section')">
+        📈 Quick Stats
+      </button>
     </div>
 
-    <h2>Add Employee</h2>
-    <input id="ename" placeholder="Name" />
-    <input id="euser" placeholder="Username" />
-    <input id="epass" type="password" placeholder="Password" />
-    <button onclick="addEmployee()">Add</button>
+    <!-- Quick Stats Section -->
+    <div id="quick-stats-section" class="content-section">
+      <h2>📈 Quick Statistics</h2>
+      <div class="stats-grid" id="statsGrid">
+        <!-- Stats will be loaded here -->
+      </div>
+      <button onclick="loadQuickStats()" style="background: #17a2b8;">🔄 Refresh Stats</button>
+    </div>
 
-    <h2>Assign Task</h2>
-    <select id="employeeList"></select>
-    <input id="taskDesc" placeholder="Task Description" />
-    <button onclick="assignTask()">Assign</button>
+    <!-- Add Employee Section -->
+    <div id="add-employee-section" class="content-section">
+      <h2>👤➕ Add New Employee</h2>
+      <input id="ename" placeholder="Full Name" required />
+      <input id="eemail" type="email" placeholder="Email Address" required />
+      <input id="ephone" type="tel" placeholder="Phone Number (10 digits)" 
+             pattern="[0-9]{10}" maxlength="10" required />
+      <input id="eaadhar" placeholder="Aadhar Number (12 digits)" 
+             pattern="[0-9]{12}" maxlength="12" required />
+      
+      <div class="photo-upload" onclick="document.getElementById('ephoto').click()">
+        <input type="file" id="ephoto" accept="image/*" />
+        <label for="ephoto">📷 Upload Employee Photo (Optional)</label>
+        <img id="photoPreview" class="photo-preview" style="display: none;" />
+      </div>
+      
+      <input id="euser" placeholder="Username" required />
+      <input id="epass" type="password" placeholder="Password" required />
+      <button onclick="addEmployee()" style="background: #28a745;">✅ Add Employee</button>
+    </div>
 
-    <h2>Employee Reports</h2>
-    <button onclick="loadReport()">Load Report</button>
-    <div id="report"></div>
+    <!-- Enhanced Assign Task Section -->
+    <div id="assign-task-section" class="content-section">
+      <h2>📋➕ Assign New Task</h2>
+      
+      <!-- Task Description Input -->
+      <div style="margin-bottom: 20px;">
+        <label for="taskDesc" style="display: block; margin-bottom: 5px; font-weight: 600; color: #333;">
+          📝 Task Description:
+        </label>
+        <textarea id="taskDesc" 
+                  placeholder="Enter detailed task description here..." 
+                  rows="3" 
+                  style="resize: vertical; width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 14px;"
+                  maxlength="500"></textarea>
+        <small style="color: #666; font-size: 12px;">Maximum 500 characters</small>
+      </div>
+      
+      <!-- Assignment Options Container -->
+      <div class="assignment-options" style="display: grid; gap: 20px;">
+        
+        <!-- Option 1: Individual Employee Assignment -->
+        <div class="task-assignment-option" 
+             style="background: linear-gradient(135deg, #e3f2fd 0%, #f0f7ff 100%); 
+                    padding: 20px; border-radius: 12px; border: 2px solid #2196f3;">
+          <h4 style="margin: 0 0 15px 0; color: #1976d2; display: flex; align-items: center; gap: 8px;">
+            👤 Assign to Individual Employee
+          </h4>
+          <select id="employeeList" 
+                  style="margin-bottom: 15px; padding: 12px; border: 2px solid #2196f3; border-radius: 8px;">
+            <option value="">Select Employee...</option>
+          </select>
+          <button onclick="assignTask()" 
+                  style="background: linear-gradient(135deg, #6f42c1, #5a2d91); 
+                         padding: 12px 20px; border-radius: 8px; font-weight: bold;">
+            📤 Assign to Selected Employee
+          </button>
+        </div>
+        
+        <!-- Option 2: Assign to All Employees -->
+        <div class="task-assignment-option" 
+             style="background: linear-gradient(135deg, #fce4ec 0%, #fff0f3 100%); 
+                    padding: 20px; border-radius: 12px; border: 2px solid #e91e63;">
+          <h4 style="margin: 0 0 10px 0; color: #c2185b; display: flex; align-items: center; gap: 8px;">
+            👥 Assign to All Employees
+          </h4>
+          <p style="margin: 0 0 15px 0; font-size: 14px; color: #666; line-height: 1.4;">
+            📢 This will create the same task for <strong>all employees</strong> simultaneously.
+            <br><small style="color: #999;">Perfect for company-wide announcements or common tasks.</small>
+          </p>
+          <button onclick="assignTaskToAll()" 
+                  class="assign-all-btn"
+                  style="background: linear-gradient(135deg, #e91e63, #ad1457); 
+                         color: white; padding: 15px 25px; border-radius: 8px; font-weight: bold;
+                         font-size: 16px; position: relative; overflow: hidden;">
+            🚀 Assign to All Employees
+          </button>
+        </div>
+        
+      </div>
+
+      <!-- Info Section -->
+      <div style="background: #fff3cd; border: 1px solid #ffc107; border-radius: 8px; padding: 15px; margin-top: 20px;">
+        <h5 style="margin: 0 0 8px 0; color: #856404;">💡 Assignment Tips:</h5>
+        <ul style="margin: 0; padding-left: 20px; font-size: 14px; color: #856404;">
+          <li><strong>Individual Assignment:</strong> Best for specific tasks requiring particular skills</li>
+          <li><strong>Bulk Assignment:</strong> Ideal for training, meetings, or company-wide initiatives</li>
+          <li><strong>Task Description:</strong> Be clear and detailed for better employee understanding</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- View Reports Section -->
+    <div id="view-report-section" class="content-section">
+      <h2>📊 Employee Reports</h2>
+      <button onclick="loadReport()" style="background: #fd7e14;">🔄 Load Reports</button>
+      <div id="report"></div>
+    </div>
+  </div>
+
+  <!-- Modal for Individual Employee Details -->
+  <div id="employeeModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <div id="modalContent"></div>
+    </div>
+  </div>
+
+  <!-- Task History Modal -->
+  <div id="taskHistoryModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeTaskHistoryModal()">&times;</span>
+      <div id="taskHistoryContent"></div>
+    </div>
+  </div>
+
+  <!-- Image Viewer Modal -->
+  <div id="imageModal" class="image-modal" onclick="closeImageModal()">
+    <span class="image-close" onclick="closeImageModal()">&times;</span>
+    <div class="image-modal-content">
+      <img id="modalImage" src="" alt="Task Photo" />
+      <div class="image-info" id="imageInfo">
+        Click anywhere to close
+      </div>
+    </div>
   </div>
 
   <script>
     const token = localStorage.getItem('token');
     if (!token || localStorage.getItem('role') !== 'admin') window.location.href = 'index.html';
 
+    // Toggle content sections
+    function toggleSection(sectionId) {
+      const sections = document.querySelectorAll('.content-section');
+      sections.forEach(section => section.classList.remove('active'));
+      
+      const targetSection = document.getElementById(sectionId);
+      if (targetSection) {
+        targetSection.classList.add('active');
+        
+        if (sectionId === 'assign-task-section') {
+          loadEmployees();
+        } else if (sectionId === 'quick-stats-section') {
+          loadQuickStats();
+        }
+      }
+    }
+
+    // Load Quick Statistics
+    async function loadQuickStats() {
+      try {
+        const res = await fetch('/admin/report', {
+          headers: { 'Authorization': 'Bearer ' + token }
+        });
+        const data = await res.json();
+        
+        const totalEmployees = data.length;
+        const totalTasks = data.reduce((sum, emp) => sum + emp.total, 0);
+        const completedTasks = data.reduce((sum, emp) => sum + emp.completed, 0);
+        const processingTasks = data.reduce((sum, emp) => sum + emp.processing, 0);
+        const pendingTasks = data.reduce((sum, emp) => sum + emp.pending, 0);
+        const successRate = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+
+        const statsHtml = `
+          <div class="stat-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+            <h3>${totalEmployees}</h3>
+            <p>👥 Total Employees</p>
+          </div>
+          <div class="stat-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+            <h3>${totalTasks}</h3>
+            <p>📋 Total Tasks</p>
+          </div>
+          <div class="stat-card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+            <h3>${completedTasks}</h3>
+            <p>✅ Completed Tasks</p>
+          </div>
+          <div class="stat-card" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+            <h3>${processingTasks}</h3>
+            <p>🔄 Processing Tasks</p>
+          </div>
+          <div class="stat-card" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+            <h3>${pendingTasks}</h3>
+            <p>⏳ Pending Tasks</p>
+          </div>
+          <div class="stat-card" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); color: #333;">
+            <h3>${successRate}%</h3>
+            <p>📈 Success Rate</p>
+          </div>
+        `;
+        
+        document.getElementById('statsGrid').innerHTML = statsHtml;
+      } catch (error) {
+        document.getElementById('statsGrid').innerHTML = '<p style="text-align: center; color: red;">❌ Error loading statistics</p>';
+        console.error('Error loading stats:', error);
+      }
+    }
+
+    // Debug function to check submissions
+    async function debugTaskHistory(taskId) {
+        try {
+            console.log('🔍 Debug: Fetching task history for:', taskId);
+            
+            const res = await fetch(`/admin/task-history/${taskId}`, {
+                headers: { 'Authorization': 'Bearer ' + token }
+            });
+            
+            const data = await res.json();
+            console.log('📋 Debug: Task history response:', data);
+            
+            console.log('📊 Debug: Submissions count:', data.submissions?.length || 0);
+            if (data.submissions) {
+                data.submissions.forEach((sub, index) => {
+                    console.log(`📤 Submission #${index + 1}:`, {
+                        remark: sub.remark,
+                        photo: sub.photoPath,
+                        date: sub.submittedAt
+                    });
+                });
+            }
+            
+            return data;
+        } catch (error) {
+            console.error('❌ Debug error:', error);
+            return null;
+        }
+    }
+
+    // Photo preview functionality
+    document.getElementById('ephoto').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      const preview = document.getElementById('photoPreview');
+      const label = document.querySelector('.photo-upload label');
+      
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          preview.src = e.target.result;
+          preview.style.display = 'block';
+          label.textContent = '✅ Photo Selected: ' + file.name;
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
     async function addEmployee() {
-      const res = await fetch('/admin/employee', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + token
-        },
-        body: JSON.stringify({
-          name: document.getElementById('ename').value,
-          username: document.getElementById('euser').value,
-          password: document.getElementById('epass').value,
-          role: 'employee'
-        })
-      });
-      alert('Employee added');
-      loadEmployees();
+      const name = document.getElementById('ename').value.trim();
+      const email = document.getElementById('eemail').value.trim();
+      const phone = document.getElementById('ephone').value.trim();
+      const aadhar = document.getElementById('eaadhar').value.trim();
+      const username = document.getElementById('euser').value.trim();
+      const password = document.getElementById('epass').value.trim();
+
+      if (!name || !email || !phone || !aadhar || !username || !password) {
+        alert('❌ Please fill all required fields');
+        return;
+      }
+
+      if (!/^[0-9]{10}$/.test(phone)) {
+        alert('❌ Please enter a valid 10-digit phone number');
+        return;
+      }
+
+      if (!/^[0-9]{12}$/.test(aadhar)) {
+        alert('❌ Please enter a valid 12-digit Aadhar number');
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('name', name);
+      formData.append('email', email);
+      formData.append('phone', phone);
+      formData.append('aadharNo', aadhar);
+      formData.append('username', username);
+      formData.append('password', password);
+      formData.append('role', 'employee');
+
+      const photo = document.getElementById('ephoto').files[0];
+      if (photo) {
+        formData.append('photo', photo);
+      }
+
+      try {
+        const res = await fetch('/admin/employee', {
+          method: 'POST',
+          headers: {
+            'Authorization': 'Bearer ' + token
+          },
+          body: formData
+        });
+
+        if (res.ok) {
+          alert('✅ Employee added successfully');
+          document.getElementById('ename').value = '';
+          document.getElementById('eemail').value = '';
+          document.getElementById('ephone').value = '';
+          document.getElementById('eaadhar').value = '';
+          document.getElementById('euser').value = '';
+          document.getElementById('epass').value = '';
+          document.getElementById('ephoto').value = '';
+          document.getElementById('photoPreview').style.display = 'none';
+          document.querySelector('.photo-upload label').textContent = '📷 Upload Employee Photo (Optional)';
+          
+          loadEmployees();
+        } else {
+          const error = await res.json();
+          alert('❌ Error: ' + error.message);
+        }
+      } catch (error) {
+        alert('❌ Network error. Please try again.');
+        console.error('Error:', error);
+      }
     }
 
     async function loadEmployees() {
-      const res = await fetch('/admin/employees', {
-        headers: { 'Authorization': 'Bearer ' + token }
-      });
-      const data = await res.json();
-      const list = document.getElementById('employeeList');
-      list.innerHTML = data.map(emp =>
-        `<option value="${emp._id}">${emp.name}</option>`).join('');
+      try {
+        const res = await fetch('/admin/employees', {
+          headers: { 'Authorization': 'Bearer ' + token }
+        });
+        const data = await res.json();
+        const list = document.getElementById('employeeList');
+        list.innerHTML = '<option value="">Select Employee...</option>' + 
+          data.map(emp => `<option value="${emp._id}">${emp.name} (${emp.email})</option>`).join('');
+      } catch (error) {
+        console.error('Error loading employees:', error);
+      }
     }
 
+    // Original assign task function
     async function assignTask() {
-      const res = await fetch('/admin/assign-task', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + token
-        },
-        body: JSON.stringify({
-          employeeId: document.getElementById('employeeList').value,
-          description: document.getElementById('taskDesc').value
-        })
-      });
-      alert('Task assigned');
+      const employeeId = document.getElementById('employeeList').value;
+      const description = document.getElementById('taskDesc').value.trim();
+
+      if (!employeeId) {
+        alert('❌ Please select an employee');
+        return;
+      }
+
+      if (!description) {
+        alert('❌ Please enter task description');
+        return;
+      }
+
+      try {
+        const res = await fetch('/admin/assign-task', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+          },
+          body: JSON.stringify({
+            employeeId: employeeId,
+            description: description
+          })
+        });
+        
+        if (res.ok) {
+          alert('✅ Task assigned successfully');
+          document.getElementById('taskDesc').value = '';
+          document.getElementById('employeeList').selectedIndex = 0;
+        } else {
+          alert('❌ Failed to assign task');
+        }
+      } catch (error) {
+        alert('❌ Error assigning task');
+        console.error('Error:', error);
+      }
     }
 
+    // NEW: Assign Task to All Employees Function
+    async function assignTaskToAll() {
+      const description = document.getElementById('taskDesc').value.trim();
+
+      if (!description) {
+        alert('❌ Please enter task description');
+        return;
+      }
+
+      // Confirmation dialog
+      const confirmMsg = `🚨 CONFIRM ACTION\n\nAre you sure you want to assign this task to ALL EMPLOYEES?\n\nTask: "${description}"\n\nThis action cannot be undone.`;
+      
+      if (!confirm(confirmMsg)) {
+        return;
+      }
+
+      try {
+        // Show loading state
+        const assignBtn = document.querySelector('button[onclick="assignTaskToAll()"]');
+        const originalText = assignBtn.innerHTML;
+        assignBtn.innerHTML = '🔄 Assigning to All...';
+        assignBtn.disabled = true;
+
+        const res = await fetch('/admin/assign-task-to-all', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+          },
+          body: JSON.stringify({
+            description: description
+          })
+        });
+        
+        const result = await res.json();
+        
+        if (res.ok) {
+          alert(`✅ Task assigned successfully to ${result.assignedCount} employees!\n\nTask: "${description}"`);
+          document.getElementById('taskDesc').value = '';
+        } else {
+          alert(`❌ Failed to assign task: ${result.message}`);
+        }
+      } catch (error) {
+        alert('❌ Network error. Please try again.');
+        console.error('Error:', error);
+      } finally {
+        // Reset button state
+        const assignBtn = document.querySelector('button[onclick="assignTaskToAll()"]');
+        assignBtn.innerHTML = '🚀 Assign to All Employees';
+        assignBtn.disabled = false;
+      }
+    }
+
+    // Load Report with Left-Aligned Employee Photos & Working Click Events
     async function loadReport() {
-      const res = await fetch('/admin/report', {
-        headers: { 'Authorization': 'Bearer ' + token }
-      });
-      const data = await res.json();
-      document.getElementById('report').innerHTML = data.map(r =>
-        `<b>${r.name}</b>: Total ${r.total}, ✅ ${r.completed}, ⏳ ${r.pending}`
-      ).join('<br>');
+      try {
+        const res = await fetch('/admin/report', {
+          headers: { 'Authorization': 'Bearer ' + token }
+        });
+        const data = await res.json();
+        
+        const reportHtml = data.map(r => {
+          // Employee photo HTML
+          const employeePhotoHtml = r.photoPath && r.photoPath !== 'null' ? 
+            `<img src="${r.photoPath}" class="employee-photo" alt="${r.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+             <div class="employee-default-photo" style="display: none;">${r.name.charAt(0).toUpperCase()}</div>` :
+            `<div class="employee-default-photo">${r.name.charAt(0).toUpperCase()}</div>`;
+
+          return `
+            <div class="employee-card" onclick="showEmployeeDetails('${r.employeeId}', '${r.name.replace(/'/g, "\\'")}')">
+              <div class="employee-photo-container">
+                ${employeePhotoHtml}
+              </div>
+              <div class="employee-info">
+                <h3 class="employee-name">
+                  ${r.name}
+                </h3>
+                <div class="employee-stats">
+                  📧 ${r.email || 'N/A'} | 📱 ${r.phone || 'N/A'}
+                </div>
+                <div class="employee-stats">
+                  📊 Total: <strong>${r.total}</strong> | 
+                  ✅ Completed: <strong style="color: #28a745;">${r.completed}</strong> | 
+                  🔄 Processing: <strong style="color: #007bff;">${r.processing}</strong> | 
+                  ⏳ Pending: <strong style="color: #ffc107;">${r.pending}</strong>
+                  ${r.total > 0 ? `| 📈 Success: <strong style="color: #6f42c1;">${Math.round((r.completed / r.total) * 100)}%</strong>` : ''}
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+        
+        document.getElementById('report').innerHTML = reportHtml || '<p>No employees found</p>';
+      } catch (error) {
+        document.getElementById('report').innerHTML = '<p>❌ Error loading report</p>';
+        console.error('Error:', error);
+      }
     }
 
-    // 🔘 Logout function
+    // Show Individual Employee Details with Clickable Tasks
+    async function showEmployeeDetails(employeeId, employeeName) {
+      try {
+        const res = await fetch('/admin/report', {
+          headers: { 'Authorization': 'Bearer ' + token }
+        });
+        const data = await res.json();
+        
+        const employee = data.find(emp => emp.employeeId === employeeId);
+        
+        if (!employee) {
+          alert('❌ Employee data not found');
+          return;
+        }
+
+        const modalContent = `
+          <h2 style="color: #007bff; margin-top: 0;">👤 ${employeeName} - Detailed Report</h2>
+          
+          <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+            <h4 style="margin: 0 0 10px 0;">📊 Summary Statistics</h4>
+            <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+              <div><strong>Total Tasks:</strong> <span style="color: #007bff;">${employee.total}</span></div>
+              <div><strong>Completed:</strong> <span style="color: #28a745;">${employee.completed}</span></div>
+              <div><strong>Processing:</strong> <span style="color: #007bff;">${employee.processing}</span></div>
+              <div><strong>Pending:</strong> <span style="color: #ffc107;">${employee.pending}</span></div>
+              <div><strong>Success Rate:</strong> <span style="color: #6f42c1;">${employee.total > 0 ? Math.round((employee.completed / employee.total) * 100) : 0}%</span></div>
+            </div>
+            <div style="margin-top: 10px;">
+              <strong>Contact:</strong> 📧 ${employee.email || 'N/A'} | 📱 ${employee.phone || 'N/A'}
+            </div>
+          </div>
+
+          <h4>📋 All Tasks (${employee.tasks.length}) - Click task name for detailed history</h4>
+          <div style="max-height: 500px; overflow-y: auto;">
+            ${employee.tasks.length > 0 ? employee.tasks.map(task => {
+              const submissionCount = task.submissions ? task.submissions.length : 0;
+              return `
+              <div class="task-detail">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                  <a href="#" class="task-link" onclick="showTaskHistory('${task._id}', '${task.description.replace(/'/g, "\\'")}', '${employeeName.replace(/'/g, "\\'")}')">
+                    📋 ${task.description} ${submissionCount > 0 ? `(${submissionCount} submissions)` : ''}
+                  </a>
+                  <span class="task-status-${task.status.toLowerCase()}">
+                    ${task.status === 'Completed' ? '✅ COMPLETED' : 
+                      task.status === 'Processing' ? '🔄 PROCESSING' : '⏳ PENDING'}
+                  </span>
+                </div>
+                
+                <div style="font-size: 12px; color: #666; margin-bottom: 10px;">
+                  📅 Created: ${new Date(task.createdAt).toLocaleDateString('en-GB')}
+                  ${task.submittedAt ? ` | 📤 Last Submitted: ${new Date(task.submittedAt).toLocaleDateString('en-GB')}` : ''}
+                  ${task.completedAt ? ` | ✅ Completed: ${new Date(task.completedAt).toLocaleDateString('en-GB')}` : ''}
+                </div>
+                
+                <div style="margin-bottom: 10px;">
+                  <strong>Latest Remark:</strong><br>
+                  <em>${task.remark || 'No remark provided'}</em>
+                </div>
+                
+                ${task.photoPath ? `
+                  <div style="margin-bottom: 10px;">
+                    <strong>Latest Photo:</strong><br>
+                    <img src="${task.photoPath}" 
+                         class="task-photo" 
+                         alt="Task Photo" 
+                         onclick="showImage('${task.photoPath}', '${task.description}', '${employeeName}')"
+                         title="Click to view full size" />
+                  </div>
+                ` : '<div style="color: #999; font-style: italic; margin-bottom: 10px;">No photo submitted</div>'}
+                
+                ${task.status === 'Processing' ? `
+                  <div style="border-top: 1px solid #ddd; padding-top: 10px;">
+                    <button class="complete-task-btn" onclick="completeTaskByAdmin('${task._id}', '${employeeName}', '${employeeId}')">
+                      ✅ Complete Task
+                    </button>
+                    <small style="display: block; margin-top: 5px; color: #666;">
+                      Click to mark this task as completed
+                    </small>
+                  </div>
+                ` : ''}
+              </div>
+            `}).join('') : '<div style="text-align: center; color: #999; padding: 40px;">No tasks assigned yet</div>'}
+          </div>
+        `;
+
+        document.getElementById('modalContent').innerHTML = modalContent;
+        document.getElementById('employeeModal').style.display = 'block';
+        
+      } catch (error) {
+        alert('❌ Error loading employee details');
+        console.error('Error:', error);
+      }
+    }
+
+    // Enhanced Show Task History Modal with All Submissions
+    async function showTaskHistory(taskId, taskDescription, employeeName) {
+      try {
+        const debugData = await debugTaskHistory(taskId);
+        
+        if (!debugData) {
+          alert('❌ Failed to load task history');
+          return;
+        }
+        
+        const data = debugData;
+        
+        let historyContent = `
+          <h2 style="color: #007bff; margin-top: 0;">📋 Task History - "${taskDescription}"</h2>
+          
+          <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+            <h4 style="margin: 0 0 10px 0;">👤 Employee Information</h4>
+            <div style="display: flex; align-items: center; gap: 15px;">
+              ${data.employee && data.employee.photoPath ? 
+                `<img src="${data.employee.photoPath}" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;" />` :
+                `<div style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, #007bff, #0056b3); display: flex; align-items: center; justify-content: center; color: white; font-size: 24px; font-weight: bold;">${data.employee ? data.employee.name.charAt(0) : 'E'}</div>`
+              }
+              <div>
+                <strong>${data.employee ? data.employee.name : 'Unknown Employee'}</strong><br>
+                📧 ${data.employee ? data.employee.email : 'N/A'}<br>
+                📱 ${data.employee && data.employee.phone ? data.employee.phone : 'N/A'}<br>
+                🆔 ${data.employee ? data.employee.username : 'N/A'}
+              </div>
+            </div>
+          </div>
+
+          <div class="task-history-section">
+            <h4 style="margin: 0 0 15px 0;">📈 Task Progress & All Submissions (${data.task.totalSubmissions || 0} total)</h4>
+            
+            <div class="submission-entry">
+              <div class="submission-header">
+                <strong>📅 Task Created</strong>
+                <span style="font-size: 12px; color: #666;">${new Date(data.task.createdAt).toLocaleDateString('en-GB')} at ${new Date(data.task.createdAt).toLocaleTimeString('en-GB')}</span>
+              </div>
+              <div style="background: #fff3cd; padding: 10px; border-radius: 4px; border-left: 4px solid #ffc107;">
+                <strong>Status:</strong> ⏳ Task assigned to employee<br>
+                <strong>Description:</strong> ${data.task.description}
+              </div>
+            </div>
+        `;
+
+        // Add all submissions
+        if (data.submissions && data.submissions.length > 0) {
+          data.submissions.forEach(submission => {
+            historyContent += `
+              <div class="submission-entry">
+                <div class="submission-header">
+                  <strong>📤 Work Submission #${submission.submissionNumber}</strong>
+                  <span style="font-size: 12px; color: #666;">${new Date(submission.submittedAt).toLocaleDateString('en-GB')} at ${new Date(submission.submittedAt).toLocaleTimeString('en-GB')}</span>
+                </div>
+                <div style="background: #cce5ff; padding: 10px; border-radius: 4px; border-left: 4px solid #007bff;">
+                  <strong>Status:</strong> 🔄 Processing - Submission received<br>
+                  <strong>Employee Remark:</strong><br>
+                  <em style="background: white; padding: 8px; border-radius: 4px; display: inline-block; margin-top: 5px; border: 1px solid #ddd;">${submission.remark}</em><br>
+                  ${submission.photoPath ? `
+                    <div style="margin-top: 10px;">
+                      <strong>Proof Photo:</strong><br>
+                      <img src="${submission.photoPath}" 
+                           class="task-photo" 
+                           alt="Task Photo" 
+                           onclick="showImage('${submission.photoPath}', '${taskDescription} - Submission #${submission.submissionNumber}', '${employeeName}')"
+                           title="Click to view full size" />
+                    </div>
+                  ` : '<div style="margin-top: 5px; color: #666; font-style: italic;">No photo submitted</div>'}
+                </div>
+              </div>
+            `;
+          });
+        } else {
+          historyContent += `
+            <div class="submission-entry">
+              <div style="background: #f8d7da; padding: 15px; border-radius: 4px; border-left: 4px solid #dc3545; text-align: center;">
+                <strong style="color: #721c24;">⚠️ No Submissions Yet</strong><br>
+                <small style="color: #721c24;">Employee hasn't submitted any work for this task</small>
+              </div>
+            </div>
+          `;
+        }
+
+        // Add completion status if task is completed
+        if (data.task.completedAt) {
+          historyContent += `
+              <div class="submission-entry">
+                <div class="submission-header">
+                  <strong>✅ Task Completed</strong>
+                  <span style="font-size: 12px; color: #666;">${new Date(data.task.completedAt).toLocaleDateString('en-GB')} at ${new Date(data.task.completedAt).toLocaleTimeString('en-GB')}</span>
+                </div>
+                <div style="background: #d4edda; padding: 10px; border-radius: 4px; border-left: 4px solid #28a745;">
+                  <strong>Status:</strong> ✅ Task completed by admin<br>
+                  <strong>Final Status:</strong> Task successfully completed and approved after ${data.task.totalSubmissions || 0} submission(s)
+                </div>
+              </div>
+          `;
+        }
+
+        // Add action button if task is in processing
+        if (data.task.status === 'Processing') {
+          historyContent += `
+            <div style="text-align: center; margin-top: 20px; padding: 15px; background: #fff3cd; border-radius: 8px;">
+              <h5 style="margin: 0 0 10px 0; color: #856404;">⚠️ Action Required</h5>
+              <p style="margin: 0 0 15px 0; color: #856404;">This task has ${data.task.totalSubmissions || 0} submission(s) waiting for your approval. Review all submitted work and complete the task when satisfied.</p>
+              <button class="complete-task-btn" onclick="completeTaskByAdmin('${data.task._id}', '${employeeName}', '${data.employee._id}')">
+                ✅ Complete Task Now
+              </button>
+            </div>
+          `;
+        }
+
+        historyContent += '</div>'; // Close task-history-section
+
+        document.getElementById('taskHistoryContent').innerHTML = historyContent;
+        document.getElementById('taskHistoryModal').style.display = 'block';
+        
+      } catch (error) {
+        alert('❌ Error loading task history');
+        console.error('Error:', error);
+      }
+    }
+
+    async function completeTaskByAdmin(taskId, employeeName, employeeId) {
+      if (!confirm(`Complete this task for ${employeeName}?`)) return;
+      
+      try {
+        const res = await fetch(`/admin/complete-task/${taskId}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+          }
+        });
+        
+        if (res.ok) {
+          alert('✅ Task completed successfully!');
+          closeTaskHistoryModal();
+          showEmployeeDetails(employeeId, employeeName);
+          loadReport();
+        } else {
+          const error = await res.json();
+          alert('❌ Error: ' + error.message);
+        }
+      } catch (error) {
+        alert('❌ Network error. Please try again.');
+        console.error('Error:', error);
+      }
+    }
+
+    function showImage(imagePath, taskDescription, employeeName) {
+      const modal = document.getElementById('imageModal');
+      const modalImg = document.getElementById('modalImage');
+      const imageInfo = document.getElementById('imageInfo');
+      
+      modal.style.display = 'block';
+      modalImg.src = imagePath;
+      imageInfo.innerHTML = `
+        <strong>${employeeName}</strong><br>
+        Task: ${taskDescription}<br>
+        <small>Click anywhere to close</small>
+      `;
+    }
+
+    function closeImageModal() {
+      document.getElementById('imageModal').style.display = 'none';
+    }
+
+    function closeModal() {
+      document.getElementById('employeeModal').style.display = 'none';
+    }
+
+    function closeTaskHistoryModal() {
+      document.getElementById('taskHistoryModal').style.display = 'none';
+    }
+
+    window.onclick = function(event) {
+      const employeeModal = document.getElementById('employeeModal');
+      const imageModal = document.getElementById('imageModal');
+      const taskHistoryModal = document.getElementById('taskHistoryModal');
+      
+      if (event.target == employeeModal) {
+        employeeModal.style.display = 'none';
+      }
+      if (event.target == imageModal) {
+        imageModal.style.display = 'none';
+      }
+      if (event.target == taskHistoryModal) {
+        taskHistoryModal.style.display = 'none';
+      }
+    }
+
     function logout() {
       localStorage.clear();
       window.location.href = 'index.html';
     }
 
-    // 💬 Go to Chat page
     function goToChat() {
       window.location.href = 'chat.html';
     }
 
-    loadEmployees();
+    // Show Quick Stats by default on page load
+    window.onload = function() {
+      toggleSection('quick-stats-section');
+    };
   </script>
 </body>
 </html>

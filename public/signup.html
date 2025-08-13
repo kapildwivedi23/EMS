@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Employee Signup - EMS</title>
+  <title>Employee Registration - EMS</title>
   <style>
     * {
       box-sizing: border-box;
@@ -13,10 +13,11 @@
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background: linear-gradient(135deg, #6a11cb, #2575fc);
-      height: 100vh;
+      min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
+      padding: 20px;
     }
 
     .box {
@@ -24,7 +25,7 @@
       padding: 40px 30px;
       border-radius: 10px;
       width: 100%;
-      max-width: 400px;
+      max-width: 450px;
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
     }
 
@@ -50,12 +51,36 @@
       outline: none;
     }
 
-    /* Hide the role selector since only employee is allowed */
-    #role {
+    .photo-upload {
+      border: 2px dashed #ccc;
+      border-radius: 6px;
+      padding: 20px;
+      text-align: center;
+      margin-bottom: 15px;
+      transition: border-color 0.2s ease;
+    }
+
+    .photo-upload:hover {
+      border-color: #2575fc;
+    }
+
+    .photo-upload input {
       display: none;
     }
 
-    /* Add a info text instead of dropdown */
+    .photo-upload label {
+      cursor: pointer;
+      color: #666;
+      font-size: 14px;
+    }
+
+    .photo-preview {
+      max-width: 100px;
+      max-height: 100px;
+      border-radius: 6px;
+      margin-top: 10px;
+    }
+
     .role-info {
       background: #f8f9fa;
       border: 1px solid #e9ecef;
@@ -121,36 +146,69 @@
 </head>
 <body>
   <div class="box">
-    <h2>Employee Signup</h2>
-    <input id="name" placeholder="Full Name" required />
+    <h2>Employee Registration</h2>
     
-    <!-- Role info instead of dropdown -->
-    <div class="role-info">
-      👤 Registering as: Employee
-    </div>
+    <form id="signupForm" enctype="multipart/form-data">
+      <input id="name" name="name" placeholder="Full Name *" required />
+      <input id="email" name="email" type="email" placeholder="Email Address *" required />
+      <input id="phone" name="phone" type="tel" placeholder="Phone Number (10 digits) *" 
+             pattern="[0-9]{10}" maxlength="10" required />
+      <input id="aadharNo" name="aadharNo" placeholder="Aadhar Number (12 digits) *" 
+             pattern="[0-9]{12}" maxlength="12" required />
+      
+      <div class="photo-upload">
+        <input type="file" id="photo" name="photo" accept="image/*" />
+        <label for="photo">📷 Upload Profile Photo (Optional)</label>
+        <img id="photoPreview" class="photo-preview" style="display: none;" />
+      </div>
+      
+      <div class="role-info">
+        👤 Registering as: Employee
+      </div>
+      
+      <input id="username" name="username" placeholder="Username *" required />
+      <input id="password" name="password" type="password" placeholder="Password (min 6 chars) *" 
+             minlength="6" required />
+    </form>
     
-    <!-- Hidden role field with employee value -->
-    <select id="role" style="display: none;">
-      <option value="employee" selected>Employee</option>
-    </select>
-    
-    <input id="username" placeholder="Username" required />
-    <input id="password" type="password" placeholder="Password" required />
     <button onclick="signup()">Create Employee Account</button>
     <p>Already have an account? <a href="index.html">Login</a></p>
     <div id="msg"></div>
   </div>
 
   <script>
+    // Photo preview functionality
+    document.getElementById('photo').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      const preview = document.getElementById('photoPreview');
+      const label = document.querySelector('.photo-upload label');
+      
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          preview.src = e.target.result;
+          preview.style.display = 'block';
+          label.textContent = '✅ Photo Selected: ' + file.name;
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
     async function signup() {
+      const formData = new FormData();
+      
+      // Get all form data
       const name = document.getElementById('name').value.trim();
-      const role = 'employee'; // Fixed to employee only
+      const email = document.getElementById('email').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const aadharNo = document.getElementById('aadharNo').value.trim();
       const username = document.getElementById('username').value.trim();
       const password = document.getElementById('password').value.trim();
+      const photo = document.getElementById('photo').files[0];
 
       // Validation
-      if (!name || !username || !password) {
-        document.getElementById('msg').innerHTML = '❌ Please fill all fields';
+      if (!name || !email || !phone || !aadharNo || !username || !password) {
+        document.getElementById('msg').innerHTML = '❌ Please fill all required fields';
         return;
       }
 
@@ -159,11 +217,33 @@
         return;
       }
 
+      if (!/^[0-9]{10}$/.test(phone)) {
+        document.getElementById('msg').innerHTML = '❌ Please enter a valid 10-digit phone number';
+        return;
+      }
+
+      if (!/^[0-9]{12}$/.test(aadharNo)) {
+        document.getElementById('msg').innerHTML = '❌ Please enter a valid 12-digit Aadhar number';
+        return;
+      }
+
+      // Append data to FormData
+      formData.append('name', name);
+      formData.append('email', email);
+      formData.append('phone', phone);
+      formData.append('aadharNo', aadharNo);
+      formData.append('role', 'employee');
+      formData.append('username', username);
+      formData.append('password', password);
+      
+      if (photo) {
+        formData.append('photo', photo);
+      }
+
       try {
         const res = await fetch('/auth/signup', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, role, username, password })
+          body: formData
         });
         
         const data = await res.json();
@@ -176,7 +256,6 @@
           localStorage.setItem('userId', data.id);
           localStorage.setItem('role', data.role);
           
-          // Always redirect to employee page since only employees can signup
           setTimeout(() => {
             window.location.href = 'employee.html';
           }, 1500);

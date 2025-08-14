@@ -1,44 +1,40 @@
 const router = require('express').Router();
 const auth = require('../middleware/auth');
 const multer = require('multer');
+const adminController = require('../controllers/adminControllers');
 
-// ✅ IMPORT INDIVIDUAL FUNCTIONS (Not the whole object)
-const adminController = require('../controllers/adminControllers.js');
-
-// Multer configuration for profile photos
+// Existing multer configuration for file uploads
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'uploads/profiles/')
+    if (file.fieldname === 'photo') {
+      cb(null, './uploads/profiles/');
+    } else {
+      cb(null, './uploads/');
+    }
   },
   filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
-    const fileExtension = file.originalname.split('.').pop();
-    cb(null, 'profile-' + uniqueSuffix + '.' + fileExtension)
+    cb(null, Date.now() + '-' + file.originalname);
   }
 });
 
 const upload = multer({ 
   storage: storage,
-  limits: {
-    fileSize: 5 * 1024 * 1024 // 5MB limit
-  },
-  fileFilter: function (req, file, cb) {
-    if (file.mimetype.startsWith('image/')) {
-      cb(null, true);
-    } else {
-      cb(new Error('Only image files are allowed!'), false);
-    }
-  }
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
 });
-// ✅ ROUTES WITH PROPER CONTROLLER REFERENCE
+
+// Existing routes
 router.post('/employee', auth(['admin']), upload.single('photo'), adminController.addEmployee);
 router.get('/employees', auth(['admin']), adminController.getEmployees);
 router.post('/assign-task', auth(['admin']), adminController.assignTask);
+router.post('/assign-task-to-all', auth(['admin']), adminController.assignTaskToAll);
 router.get('/report', auth(['admin']), adminController.getReport);
 router.post('/complete-task/:id', auth(['admin']), adminController.completeTask);
-// ADD this new route to adminRoutes.js
 router.get('/task-history/:taskId', auth(['admin']), adminController.getTaskHistory);
-router.post('/assign-task-to-all', auth(['admin']), adminController.assignTaskToAll);
-// ADD this route
+
+// NEW: Group Management Routes
+router.post('/groups', auth(['admin']), adminController.createGroup);
+router.get('/groups', auth(['admin']), adminController.getGroups);
+router.delete('/groups/:groupId', auth(['admin']), adminController.deleteGroup);
+router.post('/assign-task-to-group', auth(['admin']), adminController.assignTaskToGroup);
 
 module.exports = router;
